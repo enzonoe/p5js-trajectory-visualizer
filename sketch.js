@@ -5,12 +5,11 @@ let gravity = 9.81;
 let heigth = 0;
 let time = 0;
 
-let graphX = 50;
-let graphPeriod = 300;
-
+let graphScale;
 
 function setup() {
-  createCanvas(400, 600);
+  createCanvas(400, 700);
+  background(220);
 
   velocityInput = createInput();
   velocityInput.position(60, 400);
@@ -20,14 +19,6 @@ function setup() {
 
   gravityInput = createInput();
   gravityInput.position(60, 460);
-
-  //heigth = createInput();
-  //heigth.position(60, 490);
-
-  //time = createInput();
-  //time.position(60, 520);
-
-  background(220);
 
   stroke('black');
   strokeWeight(3);
@@ -41,21 +32,24 @@ function setup() {
   text('Velocity:', 5, 415);
   text('Degrees:', 5, 445);
   text('Gravity:', 5, 475);
-  text('Height:', 5, 505);
-  text('Time:', 5, 535);
+  text('Scale:', 5, 505);
+  text('Height:', 5, 535);
+  text('Time:', 5, 565);
+
+  slider = createSlider(1, 10);
+  slider.position(60, 490);
+  slider.size(150);
 
   button = createButton('Calculate');
-  button.position(5, 550);
+  button.position(5, 600);
   button.mousePressed(calculate);
 }
 
 function draw() {
-
+  graphScale = slider.value();
 }
 
 function calculate() {
-  background(220);
-
   // Draw axes again
   stroke('black');
   strokeWeight(3);
@@ -63,9 +57,9 @@ function calculate() {
   line(20, 380, 380, 380);
 
   // Get user input
-  let velocity = float(velocityInput.value());
-  let degrees = float(degreesInput.value());
-  let gravity = float(gravityInput.value());
+  velocity = float(velocityInput.value());
+  degrees = float(degreesInput.value());
+  gravity = float(gravityInput.value());
 
   let angle = radians(degrees);
 
@@ -76,8 +70,10 @@ function calculate() {
     let y = x1 * Math.tan(angle) - (gravity * Math.pow(x1, 2)) / (2 * Math.pow(velocity, 2) * Math.pow(Math.cos(angle), 2));
 
     // Scale and flip y for canvas
-    let canvasX = 20 + x1 * 5;
-    let canvasY = 380 - y * 5; // invert y axis to go up
+    let canvasX = 20 + x1 * 5 * graphScale;
+    let canvasY = 380 - y * 5 * graphScale;; // invert y axis to go up
+
+    console.log("Scale: " + graphScale);
 
     vertex(canvasX, canvasY);
   }
