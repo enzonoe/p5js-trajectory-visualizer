@@ -26,8 +26,8 @@ function setup() {
   line(20, 380, 380, 380);
 
   strokeWeight(1);
-  text('Height in meters', 5, 15);
-  text('Time in seconds', 300, 395);
+  text('y in meters', 5, 15);
+  text('x in seconds', 300, 395);
 
   text('Velocity:', 5, 415);
   text('Degrees:', 5, 445);
@@ -50,11 +50,8 @@ function draw() {
 }
 
 function calculate() {
-  // Draw axes again
   stroke('black');
-  strokeWeight(3);
-  line(20, 20, 20, 380);
-  line(20, 380, 380, 380);
+  strokeWeight(2);
 
   // Get user input
   velocity = float(velocityInput.value());
@@ -62,20 +59,32 @@ function calculate() {
   gravity = float(gravityInput.value());
 
   let angle = radians(degrees);
+  let y0 = zeroPoint(velocity, degrees, gravity);
 
   stroke('red');
   noFill();
   beginShape();
-  for (let x1 = 0; x1 <= 50; x1 += 0.5) {
-    let y = x1 * Math.tan(angle) - (gravity * Math.pow(x1, 2)) / (2 * Math.pow(velocity, 2) * Math.pow(Math.cos(angle), 2));
+  for (let x = 0; x <= y0; x += 0.001) {
+    let y = x * Math.tan(angle) - (gravity * Math.pow(x, 2)) / (2 * Math.pow(velocity, 2) * Math.pow(Math.cos(angle), 2));
 
     // Scale and flip y for canvas
-    let canvasX = 20 + x1 * 5 * graphScale;
-    let canvasY = 380 - y * 5 * graphScale;; // invert y axis to go up
+    let canvasX = 20 + x * 5 * graphScale;
+    let canvasY = 380 - y * 5 * graphScale; // invert y axis to go up
 
-    console.log("Scale: " + graphScale);
+    console.log("Scale: " + graphScale + " x-point: " + y0);
 
     vertex(canvasX, canvasY);
   }
   endShape();
+
+  fill('red');
+  circle(y0 * graphScale * 5 + 20, 380, 10);
+
+  stroke('black');
+  text(y0.toFixed(2) + "s", y0*5*graphScale+20, 360);
+}
+
+function zeroPoint(v, theta_deg, g) {
+  theta = radians(theta_deg);
+  return (v ** 2 * Math.sin(2 * theta)) / g;
 }
