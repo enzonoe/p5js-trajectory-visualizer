@@ -2,8 +2,7 @@
 let velocity = 0;
 let degrees = 0;
 let gravity = 9.81;
-let heigth = 0;
-let time = 0;
+let y0 = 0;
 
 let graphScale;
 
@@ -33,7 +32,6 @@ function setup() {
   text('Degrees:', 5, 445);
   text('Gravity:', 5, 475);
   text('Scale:', 5, 505);
-  text('Height:', 5, 535);
   text('Time:', 5, 565);
 
   slider = createSlider(1, 10);
@@ -47,6 +45,11 @@ function setup() {
 
 function draw() {
   graphScale = slider.value();
+
+  stroke('black');
+  fill('black');
+  strokeWeight(1);
+  text(y0.toFixed(2) + "s", 60, 565);
 }
 
 function calculate() {
@@ -59,7 +62,7 @@ function calculate() {
   gravity = float(gravityInput.value());
 
   let angle = radians(degrees);
-  let y0 = zeroPoint(velocity, degrees, gravity);
+  y0 = zeroPoint(velocity, degrees, gravity);
 
   stroke('red');
   noFill();
@@ -81,7 +84,7 @@ function calculate() {
   circle(y0 * graphScale * 5 + 20, 380, 10);
 
   stroke('black');
-  text(y0.toFixed(2) + "s", y0*5*graphScale+20, 360);
+  text(y0.toFixed(2) + "s", y0 * 5 * graphScale + 20, 360);
 }
 
 function zeroPoint(v, theta_deg, g) {
